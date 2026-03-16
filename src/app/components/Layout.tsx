@@ -1,24 +1,12 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Heart, Search, PlusCircle, Home, User, LogOut, Shield } from "lucide-react";
+import { Heart, Search, PlusCircle, Home, Shield } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "../context/AuthContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Badge } from "./ui/badge";
+import { ProfileDropdown } from "../pages/ProfileDropDown";
 
 export function Layout() {
   const location = useLocation();
-  const { user, logout, isAuthenticated } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,53 +70,7 @@ export function Layout() {
 
             <div className="flex items-center gap-2">
               {isAuthenticated ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="gap-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="hidden md:inline">{user?.name}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel>
-                      <div className="flex flex-col">
-                        <span>{user?.name}</span>
-                        <span className="text-xs text-muted-foreground font-normal">
-                          {user?.email}
-                        </span>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="flex items-center justify-between">
-                      <span>Account Type</span>
-                      <Badge variant="secondary" className="capitalize text-xs">
-                        {user?.role}
-                      </Badge>
-                    </DropdownMenuItem>
-                    {user?.role === "organization" && (
-                      <DropdownMenuItem className="flex items-center justify-between">
-                        <span>Status</span>
-                        <Badge
-                          variant="secondary"
-                          className={
-                            user.isApproved
-                              ? "bg-green-100 text-green-700 text-xs"
-                              : "bg-amber-100 text-amber-700 text-xs"
-                          }
-                        >
-                          {user.isApproved ? "Approved" : "Pending"}
-                        </Badge>
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <ProfileDropdown />
               ) : (
                 <>
                   <Link to="/login" className="hidden md:block">
