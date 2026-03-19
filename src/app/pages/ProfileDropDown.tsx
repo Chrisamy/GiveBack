@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { LogOut, User, Settings } from "lucide-react";
+import { LogOut, User, Settings, Building2 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export function ProfileDropdown() {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const handleLogout = () => {
         localStorage.clear();
@@ -27,6 +29,16 @@ export function ProfileDropdown() {
 
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 z-50">
+
+                    {user?.role === "organization" && (
+                        <button
+                            onClick={() => { navigate("/employer"); setIsOpen(false); }}
+                            className="w-full px-4 py-2 text-sm text-left hover:bg-gray-100 flex items-center gap-2"
+                        >
+                            <Building2 className="w-4 h-4" />
+                            Dashboard
+                        </button>
+                    )}
 
                     <button
                         onClick={() => navigate("/profile")}

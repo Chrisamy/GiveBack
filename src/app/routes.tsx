@@ -6,6 +6,7 @@ import { OpportunityDetail } from "./pages/OpportunityDetail";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { EmployerDashboard } from "./pages/EmployerDashboard";
 import { Layout } from "./components/Layout";
 import { ErrorPage } from "./pages/ErrorPage";
 import { NotFound } from "./pages/NotFound";
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "post", Component: PostOpportunity },
       { path: "opportunity/:id", Component: OpportunityDetail },
       { path: "admin", Component: AdminDashboard },
+      { path: "employer", Component: EmployerDashboard },
       { path: "*", Component: NotFound },
     ],
   },

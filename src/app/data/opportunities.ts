@@ -12,6 +12,8 @@ export interface Opportunity {
   image: string;
   postedDate: string;
   tags: string[];
+  postedBy?: string; // User ID of the organization that posted
+  applicationCount?: number;
 }
 
 export const mockOpportunities: Opportunity[] = [

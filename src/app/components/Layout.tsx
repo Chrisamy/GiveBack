@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Heart, Search, PlusCircle, Home, Shield } from "lucide-react";
+import { Heart, Search, PlusCircle, Home, Shield, Building2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "../context/AuthContext";
 import { ProfileDropdown } from "../pages/ProfileDropDown";
@@ -43,6 +43,18 @@ export function Layout() {
                 </Button>
               </Link>
               
+              {user?.role === "organization" && (
+                <Link to="/employer">
+                  <Button
+                    variant={location.pathname === "/employer" ? "secondary" : "ghost"}
+                    className="gap-2"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+              )}
+
               {user?.role === "organization" && user.isApproved && (
                 <Link to="/post">
                   <Button

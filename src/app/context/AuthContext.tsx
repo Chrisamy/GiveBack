@@ -9,6 +9,10 @@ export interface User {
   name: string;
   organizationName?: string;
   isApproved?: boolean; // For organizations
+  description?: string;
+  contactPhone?: string;
+  website?: string;
+  logoUrl?: string;
 }
 
 interface AuthContextType {
@@ -16,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   signup: (email: string, password: string, name: string, role: UserRole, organizationName?: string) => Promise<boolean>;
   logout: () => void;
+  updateUser: (fields: Partial<User>) => void;
   isAuthenticated: boolean;
 }
 
@@ -42,6 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           role: "organization",
           organizationName: "Hope Foundation",
           isApproved: true,
+          description: "A nonprofit dedicated to providing hope and resources to underserved communities.",
+          contactPhone: "(555) 123-4567",
+          website: "https://hopefoundation.org",
         },
         {
           id: "3",
@@ -56,6 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           role: "organization",
           organizationName: "Green Earth Initiative",
           isApproved: false,
+          description: "Environmental conservation and community sustainability.",
+          website: "https://greenearthinitiative.org",
         },
       ];
       localStorage.setItem("users", JSON.stringify(demoUsers));
@@ -128,6 +138,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
+  const updateUser = (fields: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...fields };
+    setUser(updatedUser);
+    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+    // Also update in users array
+    const usersJson = localStorage.getItem("users");
+    const users: User[] = usersJson ? JSON.parse(usersJson) : [];
+    const updatedUsers = users.map((u) =>
+      u.id === updatedUser.id ? updatedUser : u
+    );
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("currentUser");
@@ -140,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         signup,
         logout,
+        updateUser,
         isAuthenticated: !!user,
       }}
     >

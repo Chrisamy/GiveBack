@@ -7,6 +7,7 @@ import { Textarea } from "../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Card } from "../components/ui/card";
 import { Label } from "../components/ui/label";
+import { Opportunity } from "../data/opportunities";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
 
@@ -96,7 +97,32 @@ export function PostOpportunity() {
       return;
     }
 
-    // In a real app, this would submit to a backend
+    // Build opportunity and save to localStorage
+    const newOpportunity: Opportunity = {
+      id: Date.now().toString(),
+      title: formData.title,
+      organization: formData.organization,
+      location: formData.location || "Not specified",
+      type: (formData.type as Opportunity["type"]) || "remote",
+      category: formData.category || "Community Service",
+      description: formData.description,
+      requirements: formData.requirements
+        ? formData.requirements.split("\n").filter((r) => r.trim())
+        : [],
+      duration: formData.duration || "Flexible",
+      hoursPerWeek: formData.hoursPerWeek || "Flexible",
+      image: "https://images.unsplash.com/photo-1560220604-1985ebfe28b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwdm9sdW50ZWVycyUyMGNvbW11bml0eSUyMGhlbHBpbmd8ZW58MXx8fHwxNzcyNjYxMzQwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      postedDate: new Date().toISOString().split("T")[0],
+      tags: formData.category ? [formData.category] : [],
+      postedBy: user?.id,
+      applicationCount: 0,
+    };
+
+    const existing = localStorage.getItem("postedOpportunities");
+    const postedOpps: Opportunity[] = existing ? JSON.parse(existing) : [];
+    postedOpps.push(newOpportunity);
+    localStorage.setItem("postedOpportunities", JSON.stringify(postedOpps));
+
     toast.success("Opportunity posted successfully!");
     setTimeout(() => {
       navigate("/browse");
